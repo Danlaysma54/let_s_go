@@ -1,0 +1,38 @@
+openapi: 3.1.0
+info:
+  title: Pognali API
+  version: 0.1.0
+  description: Публичный HTTP API платформы «Погнали».
+  license:
+    name: Proprietary
+    identifier: LicenseRef-Proprietary
+servers:
+  - url: /
+    description: Текущий origin API
+tags:
+  - name: System
+    description: Технические операции публичного API.
+paths:
+  /api/v1/system/ping:
+    get:
+      tags: [System]
+      operationId: ping
+      summary: Проверить доступность публичного API
+      security: []
+      responses:
+        '200':
+          description: API отвечает
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PingResponse'
+components:
+  schemas:
+    PingResponse:
+      type: object
+      additionalProperties: false
+      required: [status]
+      properties:
+        status:
+          type: string
+          const: ok

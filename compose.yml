@@ -1,0 +1,38 @@
+name: pognali
+
+services:
+  db:
+    image: postgis/postgis:18-3.6-alpine
+    platform: ${DOCKER_PLATFORM:-linux/amd64}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-pognali}
+      POSTGRES_USER: ${POSTGRES_USER:-pognali}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pognali-local}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql
+      - ./infra/postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  backend:
+    profiles: [app]
+    build:
+      context: backend
+    environment:
+      DATABASE_URL: jdbc:postgresql://db:5432/${POSTGRES_DB:-pognali}
+      POSTGRES_USER: ${POSTGRES_USER:-pognali}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pognali-local}
+      BACKEND_PORT: 8080
+    ports:
+      - "${BACKEND_PORT:-8080}:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

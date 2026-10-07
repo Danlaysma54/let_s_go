@@ -1,0 +1,11 @@
+{
+  "name": "pognali-api-contract",
+  "private": true,
+  "version": "0.1.0",
+  "scripts": {
+    "lint": "redocly lint src/openapi.yaml"
+  },
+  "devDependencies": {
+    "@redocly/cli": "^2.22.1"
+  }
+}

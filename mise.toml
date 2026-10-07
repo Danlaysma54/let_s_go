@@ -1,0 +1,44 @@
+[tools]
+java = "temurin-21"
+node = "24"
+
+[env]
+_.file = { path = ".env", redact = true }
+
+[tasks.bootstrap]
+description = "Install project dependencies"
+run = [
+  "cd frontend && flutter pub get",
+  "cd web && npm install",
+  "cd docs/api && npm install",
+]
+
+[tasks.check]
+description = "Run static checks for all applications"
+run = [
+  "cd backend && ./gradlew check",
+  "cd frontend && flutter analyze",
+  "cd web && npm run lint && npm run build",
+  "cd docs/api && npm run lint",
+  "docker compose config --quiet",
+  "docker compose -f compose.e2e.yml config --quiet",
+]
+
+[tasks.test]
+description = "Run unit and widget tests"
+run = [
+  "cd backend && ./gradlew test",
+  "cd frontend && flutter test",
+]
+
+[tasks."e2e:prepare"]
+description = "Start isolated E2E dependencies"
+run = "docker compose --env-file .env.e2e -f compose.e2e.yml up -d --build --wait"
+
+[tasks."e2e:down"]
+description = "Stop isolated E2E dependencies"
+run = "docker compose --env-file .env.e2e -f compose.e2e.yml down -v"
+
+[tasks."e2e:backend"]
+description = "Build, start and smoke-test the isolated backend stack"
+run = "./scripts/e2e-backend.sh"
