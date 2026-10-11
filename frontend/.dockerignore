@@ -1,0 +1,9 @@
+.dart_tool
+.flutter-plugins
+.flutter-plugins-dependencies
+build
+coverage
+android
+ios
+Dockerfile
+.dockerignore

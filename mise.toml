@@ -31,6 +31,14 @@ run = [
   "cd frontend && flutter test",
 ]
 
+[tasks.up]
+description = "Build and start the whole application in Docker"
+run = "docker compose up -d -V --build --wait"
+
+[tasks.down]
+description = "Stop the whole application and remove its volumes"
+run = "docker compose down -v"
+
 [tasks."e2e:prepare"]
 description = "Start isolated E2E dependencies"
 run = "docker compose --env-file .env.e2e -f compose.e2e.yml up -d --build --wait"

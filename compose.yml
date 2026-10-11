@@ -18,9 +18,10 @@ services:
       interval: 5s
       timeout: 3s
       retries: 20
+    mem_limit: 1g
+    restart: unless-stopped
 
   backend:
-    profiles: [app]
     build:
       context: backend
     environment:
@@ -33,6 +34,38 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost:8080/actuator/health"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+      start_period: 20s
+    mem_limit: 1g
+    restart: unless-stopped
+
+  web:
+    build:
+      context: web
+    ports:
+      - "${WEB_PORT:-3000}:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+    mem_limit: 128m
+    restart: unless-stopped
+
+  mobile-web:
+    build:
+      context: frontend
+      args:
+        API_BASE_URL: ${MOBILE_WEB_API_BASE_URL:-}
+    ports:
+      - "${MOBILE_WEB_PORT:-3001}:8080"
+    depends_on:
+      backend:
+        condition: service_healthy
+    mem_limit: 128m
+    restart: unless-stopped
 
 volumes:
   postgres_data:
