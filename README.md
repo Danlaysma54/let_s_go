@@ -1,4 +1,4 @@
-# «Погнали»
+# "Погнали"
 
 Монорепозиторий платформы поиска и бронирования спортивных площадок.
 
@@ -9,15 +9,33 @@
 | `backend/` | Kotlin + Spring Boot API, фоновые задачи и интеграции |
 | `frontend/` | мобильное приложение Flutter (iOS/Android) |
 | `web/` | React-приложение для кабинета площадки и админ-панели |
-| `docs/` | требования, архитектура, ADR, OpenAPI и эксплуатационные инструкции |
+| `docs/` | требования, архитектура, ADR, OpenAPI и инструкции эксплуатации |
 | `infra/` | инфраструктурные манифесты и правила окружений |
 | `.agents/` | общие сценарии работы для агентной разработки |
 
-Правила работы находятся в [AGENTS.md](AGENTS.md). Более узкие правила лежат в соответствующих каталогах и дополняют корневые.
+Правила работы находятся в [AGENTS.md](AGENTS.md). Более узкие правила лежат в
+соответствующих каталогах и дополняют корневые.
 
 ## Быстрый старт
 
-Требования: Docker, Flutter 3.47+, JDK 21 и Node.js 24+. Версии инструментов зафиксированы в `mise.toml`.
+Требования: Docker, Flutter 3.47+, JDK 21 и Node.js 24+. Версии инструментов
+зафиксированы в `mise.toml`.
+
+Всё приложение (PostgreSQL, backend, web и web-сборка Flutter) в Docker:
+
+```bash
+cp .env.example .env
+mise run up
+```
+
+Задача `up` выполняет `docker compose up -d -V --build --wait` и ждёт
+готовности всех сервисов. Остановка с удалением данных базы: `mise run down`
+(`docker compose down -v`).
+
+Web: <http://localhost:3000>, Flutter web: <http://localhost:3001>, API:
+<http://localhost:8080>.
+
+Разработка с запуском приложений на хосте:
 
 ```bash
 cp .env.example .env
@@ -36,7 +54,8 @@ mise run test
 mise run e2e:prepare
 ```
 
-Подробности: [локальная разработка](docs/operations/local-development.md) и [E2E](docs/operations/e2e.md).
+Подробности: [локальная разработка](docs/operations/local-development.md) и
+[E2E](docs/operations/e2e.md).
 
 ## Архитектурные документы
 

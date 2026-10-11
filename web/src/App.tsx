@@ -5,7 +5,7 @@ function WorkspaceHome() {
   return (
     <main className="shell">
       <section className="card">
-        <span className="eyebrow">Погнали · кабинет площадки</span>
+        <span className="eyebrow">Погнали - кабинет площадки</span>
         <h1>Управление площадками и бронированиями</h1>
         <p>
           Каркас web-приложения готов. Первый рабочий модуль будет добавлен
